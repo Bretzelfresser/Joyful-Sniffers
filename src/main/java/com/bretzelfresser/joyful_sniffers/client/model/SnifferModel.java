@@ -13,6 +13,9 @@ public class SnifferModel extends AnimatedGeoModel<Sniffer> {
 
     @Override
     public ResourceLocation getTextureResource(Sniffer sniffer) {
+        if (sniffer.hasFlower()){
+            return Sniffer.FLOWER_TO_TEXTURE.get().getOrDefault(sniffer.getFlower().getItem(), JoyfulSniffers.modLoc("textures/entity/sniffer/sniffer.png"));
+        }
         if (sniffer.isOvergrown()){
             return JoyfulSniffers.modLoc("textures/entity/sniffer/sniffer_overgrown.png");
         }
