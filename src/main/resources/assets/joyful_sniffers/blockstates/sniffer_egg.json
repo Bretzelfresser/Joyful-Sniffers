@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "hatch=0,waterlogged=false": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=0,waterlogged=true": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=1,waterlogged=false": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=1,waterlogged=true": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=2,waterlogged=false": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=2,waterlogged=true": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=3,waterlogged=false": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=3,waterlogged=true": {
+      "model": "joyful_sniffers:block/sniffer_egg"
+    },
+    "hatch=4,waterlogged=false": {
+      "model": "joyful_sniffers:block/sniffer_egg_cracked"
+    },
+    "hatch=4,waterlogged=true": {
+      "model": "joyful_sniffers:block/sniffer_egg_cracked"
+    },
+    "hatch=5,waterlogged=false": {
+      "model": "joyful_sniffers:block/sniffer_egg_cracked"
+    },
+    "hatch=5,waterlogged=true": {
+      "model": "joyful_sniffers:block/sniffer_egg_cracked"
+    }
+  }
+}

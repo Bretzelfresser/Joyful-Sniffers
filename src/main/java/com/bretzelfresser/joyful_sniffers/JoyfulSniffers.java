@@ -1,9 +1,16 @@
 package com.bretzelfresser.joyful_sniffers;
 
+import com.bretzelfresser.joyful_sniffers.common.entity.Sniffer;
+import com.bretzelfresser.joyful_sniffers.core.datagen.DataGenerators;
+import com.bretzelfresser.joyful_sniffers.core.init.BlockInit;
+import com.bretzelfresser.joyful_sniffers.core.init.EntityInit;
+import com.bretzelfresser.joyful_sniffers.core.init.ItemInit;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,11 +34,20 @@ public class JoyfulSniffers
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+
+        ItemInit.ITEMS.register(modEventBus);
+        BlockInit.BLOCKS.register(modEventBus);
+        EntityInit.TYPES.register(modEventBus);
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::entityAttributes);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void entityAttributes(EntityAttributeCreationEvent event){
+        event.put(EntityInit.SNIFFER.get(), Sniffer.createAttributes().build());
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -60,5 +76,9 @@ public class JoyfulSniffers
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
+    }
+
+    public static ResourceLocation modLoc(String name){
+        return new ResourceLocation(MODID, name);
     }
 }
