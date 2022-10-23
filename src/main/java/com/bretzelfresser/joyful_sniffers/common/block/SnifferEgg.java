@@ -1,6 +1,7 @@
 package com.bretzelfresser.joyful_sniffers.common.block;
 
 import com.bretzelfresser.joyful_sniffers.common.entity.Sniffer;
+import com.bretzelfresser.joyful_sniffers.core.config.JoyfulSnifferConfig;
 import com.bretzelfresser.joyful_sniffers.core.init.BlockInit;
 import com.bretzelfresser.joyful_sniffers.core.init.EntityInit;
 import net.minecraft.core.BlockPos;
@@ -113,8 +114,7 @@ public class SnifferEgg extends Block implements SimpleWaterloggedBlock {
         if (f < 0.69F && f > 0.65F) {
             return true;
         } else {
-            //return p_57766_.random.nextInt((int) (500f / 7f)) == 0;
-            return true;
+            return p_57766_.random.nextInt((int) (500f / (7f * JoyfulSnifferConfig.EGG_HATCH_MULTIPLIER.get()))) == 0;
         }
     }
 

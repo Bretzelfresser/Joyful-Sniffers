@@ -7,6 +7,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -19,6 +21,7 @@ public class BlockInit {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JoyfulSniffers.MODID);
 
     public static final RegistryObject<SnifferEgg> SNIFFER_EGG = register("sniffer_egg", SnifferEgg::new, ModCreativeTabs.EGGS);
+    public static final RegistryObject<Block> ALGAE = register("algae", () -> new Block(BlockBehaviour.Properties.of(Material.PLANT).noCollission().noOcclusion().instabreak()), ModCreativeTabs.BLOCKS);
 
 
     public static final <T extends Block> RegistryObject<T> register(String name, Supplier<T> blockSupplier, CreativeModeTab tab){

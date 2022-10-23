@@ -1,5 +1,10 @@
 {
+  "block.joyful_sniffers.algae": "Algae",
   "block.joyful_sniffers.sniffer_egg": "Sniffer Egg",
-  "item.joyful_sniffers.sniffer_spawn_egg": "Sniffer SPawn Egg",
-  "joyful_sniffers.eggs": "Eggs"
+  "item.joyful_sniffers.sniffer_spawn_egg": "Sniffer Spawn Egg",
+  "joyful_sniffers.blocks": "Building Blocks",
+  "joyful_sniffers.eggs": "Eggs",
+
+  "itemGroup.joyful_sniffers.eggs": "Eggs",
+  "itemGroup.joyful_sniffers.blocks": "Blocks"
 }

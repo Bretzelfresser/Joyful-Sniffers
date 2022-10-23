@@ -1,6 +1,7 @@
 package com.bretzelfresser.joyful_sniffers;
 
 import com.bretzelfresser.joyful_sniffers.common.entity.Sniffer;
+import com.bretzelfresser.joyful_sniffers.core.config.JoyfulSnifferConfig;
 import com.bretzelfresser.joyful_sniffers.core.datagen.DataGenerators;
 import com.bretzelfresser.joyful_sniffers.core.init.BlockInit;
 import com.bretzelfresser.joyful_sniffers.core.init.EntityInit;
@@ -13,7 +14,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -33,7 +36,7 @@ public class JoyfulSniffers
     public JoyfulSniffers()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, JoyfulSnifferConfig.BUILDER.build());
 
         ItemInit.ITEMS.register(modEventBus);
         BlockInit.BLOCKS.register(modEventBus);

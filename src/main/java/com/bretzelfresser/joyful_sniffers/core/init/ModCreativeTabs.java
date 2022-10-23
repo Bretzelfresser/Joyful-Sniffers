@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 public class ModCreativeTabs {
 
     public static final ModTab EGGS = createMod("eggs", () -> BlockInit.SNIFFER_EGG.get());
+    public static final ModTab BLOCKS = createMod("blocks", () -> BlockInit.ALGAE.get());
 
     private static ModTab createMod(String name, Supplier<ItemLike> icon) {
         return new ModTab(JoyfulSniffers.MODID + "." + name, icon);
