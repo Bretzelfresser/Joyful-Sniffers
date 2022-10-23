@@ -6,7 +6,7 @@ public class JoyfulSnifferConfig {
 
     public static final ForgeConfigSpec.Builder BUILDER;
     public static final ForgeConfigSpec.DoubleValue EGG_HATCH_MULTIPLIER;
-    public static final ForgeConfigSpec.IntValue TICKS_FOR_ALGEA, TICKS_OVERGROW;
+    public static final ForgeConfigSpec.IntValue TICKS_FOR_ALGEA, TICKS_OVERGROW, SPORE_COUNTDOWN;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -17,6 +17,9 @@ public class JoyfulSnifferConfig {
         TICKS_FOR_ALGEA = builder.defineInRange("ticks algae", 24000, 100, Integer.MAX_VALUE);
         builder.comment("this defines how much ticks it takes for a sniffer with algae on its back to overgrow");
         TICKS_OVERGROW = builder.defineInRange("ticks to overgrow", 72000, 100, Integer.MAX_VALUE);
+        builder.comment("this defines how long the cooldown is until the sniffer can drop ancient spores again");
+        builder.comment("this is in ticks");
+        SPORE_COUNTDOWN = builder.defineInRange("spore cooldown", 6000, 100, Integer.MAX_VALUE);
         builder.pop();
         BUILDER = builder;
     }

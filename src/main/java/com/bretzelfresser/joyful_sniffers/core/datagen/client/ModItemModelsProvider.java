@@ -20,7 +20,7 @@ public class ModItemModelsProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        spawnEgg(ItemInit.SNIFFER_SPAWN_EGG.get());
+        simple(ItemInit.SNIFFER_SPAWN_EGG.get());
     }
 
     private void simple(Item... items) {

@@ -1,11 +1,13 @@
 package com.bretzelfresser.joyful_sniffers.core.init;
 
 import com.bretzelfresser.joyful_sniffers.JoyfulSniffers;
+import com.bretzelfresser.joyful_sniffers.common.block.AlgaeBlock;
 import com.bretzelfresser.joyful_sniffers.common.block.SnifferEgg;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
@@ -20,8 +22,8 @@ public class BlockInit {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, JoyfulSniffers.MODID);
 
-    public static final RegistryObject<SnifferEgg> SNIFFER_EGG = register("sniffer_egg", SnifferEgg::new, ModCreativeTabs.EGGS);
-    public static final RegistryObject<Block> ALGAE = register("algae", () -> new Block(BlockBehaviour.Properties.of(Material.PLANT).noCollission().noOcclusion().instabreak()), ModCreativeTabs.BLOCKS);
+    public static final RegistryObject<SnifferEgg> SNIFFER_EGG = register("sniffer_egg", SnifferEgg::new, CreativeModeTab.TAB_MISC);
+    public static final RegistryObject<Block> ALGAE = register("algae", AlgaeBlock::new, b -> new PlaceOnWaterBlockItem(b, new Item.Properties().tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
 
     public static final <T extends Block> RegistryObject<T> register(String name, Supplier<T> blockSupplier, CreativeModeTab tab){

@@ -4,6 +4,8 @@ import com.bretzelfresser.joyful_sniffers.JoyfulSniffers;
 import com.bretzelfresser.joyful_sniffers.core.datagen.client.ModBlockStatesProvider;
 import com.bretzelfresser.joyful_sniffers.core.datagen.client.ModItemModelsProvider;
 import com.bretzelfresser.joyful_sniffers.core.datagen.client.ModLangProvider;
+import com.bretzelfresser.joyful_sniffers.core.datagen.server.ModBlockTagsProvider;
+import com.bretzelfresser.joyful_sniffers.core.datagen.server.ModItemTagsProvider;
 import com.bretzelfresser.joyful_sniffers.core.datagen.server.ModLootTableProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -43,5 +45,8 @@ public class DataGenerators {
     private static void gatherServerData(DataGenerator gen, ExistingFileHelper helper) {
         gen.addProvider(true, new ModLangProvider(gen));
         gen.addProvider(true, new ModLootTableProvider(gen));
+        ModBlockTagsProvider blockTags = new ModBlockTagsProvider(gen, helper);
+        gen.addProvider(true, blockTags);
+        gen.addProvider(true, new ModItemTagsProvider(gen, blockTags, helper));
     }
 }

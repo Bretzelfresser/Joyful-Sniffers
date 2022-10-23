@@ -31,7 +31,7 @@ public class JoyfulSniffers
     // Define mod id in a common place for everything to reference
     public static final String MODID = "joyful_sniffers";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public JoyfulSniffers()
     {

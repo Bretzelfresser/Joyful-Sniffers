@@ -1,8 +1,10 @@
 package com.bretzelfresser.joyful_sniffers.common.entity;
 
+import com.bretzelfresser.joyful_sniffers.JoyfulSniffers;
 import com.bretzelfresser.joyful_sniffers.core.config.JoyfulSnifferConfig;
 import com.bretzelfresser.joyful_sniffers.core.init.BlockInit;
 import com.bretzelfresser.joyful_sniffers.core.init.EntityInit;
+import com.bretzelfresser.joyful_sniffers.core.init.ModTags;
 import com.google.common.collect.Maps;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -22,15 +24,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IForgeShearable;
@@ -44,6 +46,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,25 +63,27 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
     public static final EntityDataAccessor<Boolean> OVERGROWN = SynchedEntityData.defineId(Sniffer.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> ALGAE = SynchedEntityData.defineId(Sniffer.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<ItemStack> FLOWER = SynchedEntityData.defineId(Sniffer.class, EntityDataSerializers.ITEM_STACK);
+    public static final EntityDataAccessor<Boolean> LAYING = SynchedEntityData.defineId(Sniffer.class, EntityDataSerializers.BOOLEAN);
 
-    public static final Supplier<Map<Item, ResourceLocation>> FLOWER_TO_TEXTURE = () -> Util.make(Maps.newHashMap(), map ->{
-       map.put(Items.ALLIUM, modLoc("textures/entity/sniffer/allium.png"));
-       map.put(Items.AZURE_BLUET, modLoc("textures/entity/sniffer/azure_bluet.png"));
-       map.put(Items.BLUE_ORCHID, modLoc("textures/entity/sniffer/blue_orchid.png"));
-       map.put(Items.BROWN_MUSHROOM, modLoc("textures/entity/sniffer/brown_mushroom.png"));
-       map.put(Items.CORNFLOWER, modLoc("textures/entity/sniffer/dandelion.png"));
-       map.put(Items.LILAC, modLoc("textures/entity/sniffer/lilac.png"));
-       map.put(Items.LILY_OF_THE_VALLEY, modLoc("textures/entity/sniffer/lilly_of_the_valley.png"));
-       map.put(Items.ORANGE_TULIP, modLoc("textures/entity/sniffer/orange_tulip.png"));
-       map.put(Items.OXEYE_DAISY, modLoc("textures/entity/sniffer/oxeye_daisy.png"));
-       map.put(Items.PEONY, modLoc("textures/entity/sniffer/peony.png"));
-       map.put(Items.PINK_TULIP, modLoc("textures/entity/sniffer/pink_tulip.png"));
-       map.put(Items.POPPY, modLoc("textures/entity/sniffer/poppy.png"));
-       map.put(Items.RED_MUSHROOM, modLoc("textures/entity/sniffer/red_mushroom.png"));
-       map.put(Items.RED_TULIP, modLoc("textures/entity/sniffer/red_tulip.png"));
-       map.put(Items.ROSE_BUSH, modLoc("textures/entity/sniffer/rose.png"));
-       map.put(Items.SUNFLOWER, modLoc("textures/entity/sniffer/sunflower.png"));
-       map.put(Items.WHITE_TULIP, modLoc("textures/entity/sniffer/white_tulip.png"));
+    public static final Supplier<Map<Item, ResourceLocation>> FLOWER_TO_TEXTURE = () -> Util.make(Maps.newHashMap(), map -> {
+        map.put(Items.ALLIUM, modLoc("textures/entity/sniffer/allium.png"));
+        map.put(Items.AZURE_BLUET, modLoc("textures/entity/sniffer/azure_bluet.png"));
+        map.put(Items.BLUE_ORCHID, modLoc("textures/entity/sniffer/blue_orchid.png"));
+        map.put(Items.BROWN_MUSHROOM, modLoc("textures/entity/sniffer/brown_mushroom.png"));
+        map.put(Items.CORNFLOWER, modLoc("textures/entity/sniffer/cornflower.png"));
+        map.put(Items.LILAC, modLoc("textures/entity/sniffer/lilac.png"));
+        map.put(Items.LILY_OF_THE_VALLEY, modLoc("textures/entity/sniffer/lilly_of_the_valley.png"));
+        map.put(Items.ORANGE_TULIP, modLoc("textures/entity/sniffer/orange_tulip.png"));
+        map.put(Items.OXEYE_DAISY, modLoc("textures/entity/sniffer/oxeye_daisy.png"));
+        map.put(Items.PEONY, modLoc("textures/entity/sniffer/peony.png"));
+        map.put(Items.PINK_TULIP, modLoc("textures/entity/sniffer/pink_tulip.png"));
+        map.put(Items.POPPY, modLoc("textures/entity/sniffer/poppy.png"));
+        map.put(Items.RED_MUSHROOM, modLoc("textures/entity/sniffer/red_mushroom.png"));
+        map.put(Items.RED_TULIP, modLoc("textures/entity/sniffer/red_tulip.png"));
+        map.put(Items.ROSE_BUSH, modLoc("textures/entity/sniffer/rose.png"));
+        map.put(Items.SUNFLOWER, modLoc("textures/entity/sniffer/sunflower.png"));
+        map.put(Items.WHITE_TULIP, modLoc("textures/entity/sniffer/white_tulip.png"));
+        map.put(Items.DANDELION, modLoc("textures/entity/sniffer/dandelion.png"));
     });
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -87,10 +92,11 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
     }
 
     private AnimationFactory factory = new AnimationFactory(this);
-    private int tickCounter;
+    private int tickCounter, layCounter, sporeCounter;
 
     public Sniffer(EntityType<Sniffer> type, Level level) {
         super(type, level);
+        sporeCounter = JoyfulSnifferConfig.SPORE_COUNTDOWN.get();
     }
 
 
@@ -100,14 +106,32 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         this.entityData.define(OVERGROWN, false);
         this.entityData.define(ALGAE, false);
         this.entityData.define(FLOWER, ItemStack.EMPTY);
+        this.entityData.define(LAYING, false);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(4, new BreedGoal(this, 1D));
-        this.goalSelector.addGoal(10, new RandomStrollGoal(this, 0.6D));
-        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10F));
+        this.goalSelector.addGoal(4, new BreedGoal(this, 0.4D) {
+            @Override
+            public boolean canUse() {
+                return !isLaying() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(5, new TemptGoal(this, 0.4D, Ingredient.of(Items.GLOW_BERRIES), false));
+        this.goalSelector.addGoal(9, new RandomLayDownGoal(this, 0.001f, 500));
+        this.goalSelector.addGoal(10, new RandomStrollGoal(this, 0.4D) {
+            @Override
+            public boolean canUse() {
+                return !isLaying() && super.canUse();
+            }
+        });
+        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10F) {
+            @Override
+            public boolean canUse() {
+                return !isLaying() && super.canUse();
+            }
+        });
     }
 
     @Override
@@ -115,6 +139,23 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         super.tick();
         if (!isBaby() && !level.isClientSide())
             tickMossGrowth();
+        if (!level.isClientSide()) {
+            if (layCounter > 0) {
+                layCounter--;
+                if (layCounter <= 0) {
+                    setLaying(false);
+                }
+            }
+            if (sporeCounter > 0){
+                sporeCounter--;
+            }
+            if (sporeCounter <= 0){
+                if (this.level.getBlockState(blockPosition().below()).is(ModTags.Blocks.SNIFFER_GROUND)) {
+                    makeSpores();
+                    sporeCounter = JoyfulSnifferConfig.SPORE_COUNTDOWN.get();
+                }
+            }
+        }
     }
 
     /**
@@ -136,11 +177,17 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         }
     }
 
+    protected void makeSpores(){
+        int count = this.random.nextInt(10) == 0 ? 0 : 1;
+        count++;
+        Block.popResource(this.level, this.blockPosition(), new ItemStack(Items.WHEAT_SEEDS, count));
+    }
+
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!level.isClientSide()){
+        if (!level.isClientSide()) {
             ItemStack held = player.getItemInHand(hand);
-            if (isOvergrown() && !hasFlower() && FLOWER_TO_TEXTURE.get().containsKey(held.getItem())){
+            if (isOvergrown() && !hasFlower() && FLOWER_TO_TEXTURE.get().containsKey(held.getItem())) {
                 ItemStack heldCopy = held.copy();
                 if (!player.getAbilities().instabuild)
                     heldCopy.setCount(1);
@@ -153,13 +200,13 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
 
     @Override
     public @NotNull List<ItemStack> onSheared(@Nullable Player player, @NotNull ItemStack item, Level level, BlockPos pos, int fortune) {
-        level.playSound(null, this, SoundEvents.SHEEP_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 1.0F, 1.0F);
         this.gameEvent(GameEvent.SHEAR, player);
         if (!level.isClientSide) {
             List<ItemStack> items = new ArrayList<>();
-            if (hasFlower()){
+            if (hasFlower()) {
                 items.add(getFlower());
                 entityData.set(FLOWER, ItemStack.EMPTY);
+                level.playSound(null, this, SoundEvents.SHEEP_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 1.0F, 1.0F);
                 return items;
             }
             if (isOvergrown()) {
@@ -168,6 +215,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
                     items.add(new ItemStack(BlockInit.ALGAE.get()));
                 }
                 setOvergrowth(false);
+                level.playSound(null, this, SoundEvents.SHEEP_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 1.0F, 1.0F);
                 return items;
             } else if (hasAlgae()) {
                 int i = 1 + fortune + this.random.nextInt(2);
@@ -175,6 +223,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
                     items.add(new ItemStack(BlockInit.ALGAE.get()));
                 }
                 setAlgae(false);
+                level.playSound(null, this, SoundEvents.SHEEP_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 1.0F, 1.0F);
                 return items;
             }
         }
@@ -189,6 +238,9 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         tag.putBoolean("overgrown", this.entityData.get(OVERGROWN));
         tag.putBoolean("algae", this.entityData.get(ALGAE));
         tag.putInt("tickCounter", this.tickCounter);
+        tag.putBoolean("laying", this.entityData.get(LAYING));
+        tag.putInt("layCounter", this.tickCounter);
+        tag.putInt("sporeCounter", this.sporeCounter);
     }
 
     @Override
@@ -200,6 +252,9 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         entityData.set(OVERGROWN, tag.getBoolean("overgrown"));
         entityData.set(ALGAE, tag.getBoolean("algae"));
         this.tickCounter = tag.getInt("tickCounter");
+        this.entityData.set(LAYING, tag.getBoolean("laying"));
+        this.layCounter = tag.getInt("layCounter");
+        this.sporeCounter = tag.getInt("sporeCounter");
     }
 
     @Nullable
@@ -210,6 +265,10 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
 
 
     private PlayState predicate(AnimationEvent<Sniffer> event) {
+        if (isLaying()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("lay").addAnimation("lay_idle", ILoopType.EDefaultLoopTypes.LOOP));
+            return PlayState.CONTINUE;
+        }
         if (this.xOld != this.getX() || this.yOld != this.getY() || this.zOld != this.getZ()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("walk"));
             return PlayState.CONTINUE;
@@ -265,7 +324,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         return !entityData.get(FLOWER).isEmpty();
     }
 
-    public ItemStack getFlower(){
+    public ItemStack getFlower() {
         return entityData.get(FLOWER);
     }
 
@@ -279,5 +338,50 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         if (!overgrowth && !isOvergrown())
             this.tickCounter = 0;
         entityData.set(OVERGROWN, overgrowth);
+    }
+
+
+    public boolean isLaying() {
+        return entityData.get(LAYING);
+    }
+
+    public void setLaying(boolean laying) {
+        if (laying != isLaying())
+            entityData.set(LAYING, laying);
+    }
+
+    public void setLaying(boolean laying, int ticks) {
+        setLaying(laying);
+        this.layCounter = ticks;
+    }
+
+    protected static class RandomLayDownGoal extends Goal {
+
+        private final float chance;
+        private final int layTicks;
+        private final Sniffer sniffer;
+        private final Random rand = new Random();
+
+        /**
+         * @param sniffer
+         * @param chance   the change that the sniffer will lay down
+         * @param layTicks defines the minimun ticks the sniffer will lay
+         */
+        public RandomLayDownGoal(Sniffer sniffer, float chance, int layTicks) {
+            this.sniffer = sniffer;
+            this.chance = chance;
+            this.layTicks = layTicks;
+        }
+
+        @Override
+        public boolean canUse() {
+            return !sniffer.isLaying() && rand.nextFloat() < this.chance;
+        }
+
+        @Override
+        public void start() {
+            sniffer.setLaying(true, layTicks + rand.nextInt(1200));
+            sniffer.navigation.stop();
+        }
     }
 }
