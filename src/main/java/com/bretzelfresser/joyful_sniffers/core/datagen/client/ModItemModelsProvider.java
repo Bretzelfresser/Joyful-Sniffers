@@ -1,6 +1,7 @@
 package com.bretzelfresser.joyful_sniffers.core.datagen.client;
 
 import com.bretzelfresser.joyful_sniffers.JoyfulSniffers;
+import com.bretzelfresser.joyful_sniffers.core.init.BlockInit;
 import com.bretzelfresser.joyful_sniffers.core.init.ItemInit;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
@@ -21,6 +22,7 @@ public class ModItemModelsProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         simple(ItemInit.SNIFFER_SPAWN_EGG.get());
+        simple(BlockInit.SNIFF_SEEDS.get().asItem());
     }
 
     private void simple(Item... items) {

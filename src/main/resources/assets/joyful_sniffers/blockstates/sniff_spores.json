@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "age=0,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_0"
+    },
+    "age=0,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_0"
+    },
+    "age=1,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_1"
+    },
+    "age=1,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_1"
+    },
+    "age=2,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_2"
+    },
+    "age=2,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_2"
+    },
+    "age=3,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_3"
+    },
+    "age=3,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_3"
+    },
+    "age=4,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_4"
+    },
+    "age=4,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_4"
+    },
+    "age=5,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_4"
+    },
+    "age=5,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_4"
+    },
+    "age=6,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_5b"
+    },
+    "age=6,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_5t"
+    },
+    "age=7,half=lower": {
+      "model": "joyful_sniffers:block/sniffweed_6b"
+    },
+    "age=7,half=upper": {
+      "model": "joyful_sniffers:block/sniffweed_6t"
+    }
+  }
+}
