@@ -4,6 +4,7 @@ import com.bretzelfresser.joyful_sniffers.JoyfulSniffers;
 import com.bretzelfresser.joyful_sniffers.core.config.JoyfulSnifferConfig;
 import com.bretzelfresser.joyful_sniffers.core.init.BlockInit;
 import com.bretzelfresser.joyful_sniffers.core.init.EntityInit;
+import com.bretzelfresser.joyful_sniffers.core.init.ItemInit;
 import com.bretzelfresser.joyful_sniffers.core.init.ModTags;
 import com.google.common.collect.Maps;
 import net.minecraft.Util;
@@ -146,17 +147,17 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
                     setLaying(false);
                 }
             }
-            if (sporeCounter > 0){
+            if (sporeCounter > 0) {
                 sporeCounter--;
             }
             if (sniffCounter > 0) {
                 sniffCounter--;
-                if (sniffCounter == 0){
+                if (sniffCounter == 0) {
                     this.entityData.set(SNIFFING, false);
                     makeSpores();
                 }
             }
-            if (sporeCounter <= 0){
+            if (sporeCounter <= 0) {
                 if (this.level.getBlockState(blockPosition().below()).is(ModTags.Blocks.SNIFFER_GROUND)) {
                     setSniffing(7 * 20);
                     sporeCounter = JoyfulSnifferConfig.SPORE_COUNTDOWN.get();
@@ -184,10 +185,10 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         }
     }
 
-    protected void makeSpores(){
+    protected void makeSpores() {
         int count = this.random.nextInt(50) == 0 ? 0 : 1;
         count++;
-        Block.popResource(this.level, this.blockPosition(), new ItemStack(Items.WHEAT_SEEDS, count));
+        Block.popResource(this.level, this.blockPosition(), new ItemStack(BlockInit.SNIFF_SEEDS.get(), count));
     }
 
     @Override
@@ -276,7 +277,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
     private PlayState predicate(AnimationEvent<Sniffer> event) {
         if (event.getController().getCurrentAnimation() != null && event.getController().getCurrentAnimation().animationName.equals("get_up"))
             return PlayState.CONTINUE;
-        if (isSniffing()){
+        if (isSniffing()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("sniff", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
@@ -310,12 +311,18 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
 
     @Override
     protected float getStandingEyeHeight(Pose p_28295_, EntityDimensions p_28296_) {
-        return this.isBaby() ? p_28296_.height * 0.65F : 1.3F;
+        float standingHeight = 1.3f;
+        if (this.isBaby()) {
+            standingHeight = p_28296_.height * 0.65F;
+        }
+        if (isLaying())
+            standingHeight *= 0.8;
+        return standingHeight;
     }
 
     @Override
     public float getScale() {
-        return this.isBaby() ? 1F : 1.3F;
+        return this.isBaby() ? this.isLaying() ? 0.9f : 1f : this.isLaying() ? 1.2f : 1.3f;
     }
 
     /**
@@ -365,7 +372,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
             entityData.set(LAYING, laying);
             if (!laying) {
                 this.layCounter = 0;
-                GeckoLibUtil.getControllerForID(this.factory, this.getUUID().hashCode(), CONTROLLER_NAME).setAnimation(new AnimationBuilder().addAnimation("get_up"));
+                this.level.broadcastEntityEvent(this, (byte)10);
             }
         }
     }
@@ -374,29 +381,37 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         setLaying(laying);
         if (laying)
             this.layCounter = ticks;
-        if (!laying){
+        if (!laying) {
             this.layCounter = 0;
-            GeckoLibUtil.getControllerForID(this.factory, this.getUUID().hashCode(), CONTROLLER_NAME).setAnimation(new AnimationBuilder().addAnimation("get_up"));
+            this.level.broadcastEntityEvent(this, (byte)10);
         }
     }
 
-    public boolean isSniffing(){
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id == 10) {
+            GeckoLibUtil.getControllerForID(this.factory, this.getUUID().hashCode(), CONTROLLER_NAME).setAnimation(new AnimationBuilder().addAnimation("get_up"));
+        }
+        super.handleEntityEvent(id);
+    }
+
+    public boolean isSniffing() {
         return this.entityData.get(SNIFFING);
     }
 
-    public void setSniffing(boolean sniffing){
+    public void setSniffing(boolean sniffing) {
         if (sniffing != isSniffing())
             this.entityData.set(SNIFFING, sniffing);
     }
 
-    public void setSniffing(int time){
+    public void setSniffing(int time) {
         this.sniffCounter = time;
         this.entityData.set(SNIFFING, true);
     }
 
     @Override
     public boolean hurt(DamageSource p_27567_, float p_27568_) {
-        if (super.hurt(p_27567_, p_27568_)){
+        if (super.hurt(p_27567_, p_27568_)) {
             if (isLaying())
                 setLaying(false);
             return true;
