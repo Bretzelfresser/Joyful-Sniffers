@@ -35,6 +35,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IForgeShearable;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -47,6 +48,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +95,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
 
     private AnimationFactory factory = new AnimationFactory(this);
     private int tickCounter, layCounter, sporeCounter, sniffCounter;
+    private ItemStackHandler inv = new ItemStackHandler(1);
 
     public Sniffer(EntityType<Sniffer> type, Level level) {
         super(type, level);
@@ -250,6 +253,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         tag.putInt("layCounter", this.tickCounter);
         tag.putInt("sporeCounter", this.sporeCounter);
         tag.putInt("sniffCounter", this.sniffCounter);
+        tag.put("inventory", this.inv.serializeNBT());
     }
 
     @Override
@@ -265,6 +269,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         this.layCounter = tag.getInt("layCounter");
         this.sporeCounter = tag.getInt("sporeCounter");
         this.sniffCounter = tag.getInt("sniffCounter");
+        this.inv.deserializeNBT(tag.getCompound("inventory"));
     }
 
     @Nullable
@@ -420,15 +425,8 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
     }
 
     @Override
-    public void push(double p_20286_, double p_20287_, double p_20288_) {
-        super.push(p_20286_, p_20287_, p_20288_);
-        if (isLaying())
-            setLaying(false);
-    }
-
-    @Override
-    public void push(Entity p_21294_) {
-        super.push(p_21294_);
+    public void push(double dx, double dy, double dz) {
+        super.push(dx, dy, dz);
         if (isLaying())
             setLaying(false);
     }
@@ -443,7 +441,7 @@ public class Sniffer extends Animal implements IAnimatable, IForgeShearable {
         /**
          * @param sniffer
          * @param chance   the change that the sniffer will lay down
-         * @param layTicks defines the minimun ticks the sniffer will lay
+         * @param layTicks defines the minimum ticks the sniffer will lay
          */
         public RandomLayDownGoal(Sniffer sniffer, float chance, int layTicks) {
             this.sniffer = sniffer;
